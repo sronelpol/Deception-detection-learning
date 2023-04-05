@@ -29,22 +29,24 @@ def add_trial_testimonies_data():
     print(count_trial)
     return video_list
 
+OPENFACE = DIR.parent / "OpenFace_2.2.0_win_x64" / "FeatureExtraction.exe"
 
 def extract_micro_expression_features(videolist):
     dict_input_output = {}
     output_filename_list = list()
-    gaze_trial = 0
+    micro_expressions_trial = 0
     for filename in videolist:
         new_filename = os.path.split(filename)[-1]
-        output_filename = "gaze_real_life_deception_" + new_filename
+        output_filename = "micro_expressions_real_life_deception_" + new_filename
         output_filename = output_filename.replace(".mp4", ".csv")
         output_file_path = f"{str(MICRO_EXPRESSION_FEATURES_DIR)}/{output_filename}"
-        run_open_face_in_docker(filename, output_file_path, "", mode=" -pose -aus")
-        gaze_trial += 1
+        cmd = f"{str(OPENFACE)} -f {filename} -of {output_file_path} -pose -aus"
+        exit_status = os.system(cmd)
+        micro_expressions_trial += 1
         dict_input_output[filename] = output_file_path
         output_filename_list.append(output_file_path)
     print("converted wav files counts are:")
-    print("Trail = " + str(gaze_trial))
+    print("Trail = " + str(micro_expressions_trial))
     return dict_input_output, output_filename_list
 
 
@@ -52,7 +54,7 @@ def annotate(dict_input_output):
     head = []
     head.append("Path_for_mp4_video")
     head.append("csv_file_name")
-    head.append("csv_file_name_path_mexp_data")
+    head.append("csv_file_name_path_micro_expression_data")
     head.append("label")
     index = 0
     df_input_output = pd.DataFrame(columns=head)
@@ -92,6 +94,7 @@ def re_annotate_something():
 
 
 if __name__ == '__main__':
-    video_list = add_trial_testimonies_data()
-    dict_input_output, output_filename_list = extract_micro_expression_features(video_list)
-    annotate(dict_input_output)
+    # video_list = add_trial_testimonies_data()
+    # dict_input_output, output_filename_list = extract_micro_expression_features(video_list)
+    # annotate(dict_input_output)
+    re_annotate_something()

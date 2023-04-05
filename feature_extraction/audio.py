@@ -1,21 +1,9 @@
-import os
-import sys
 import glob
-import csv
+import os
 from pathlib import Path
-from pydub import AudioSegment
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-import keras
-from keras import models
-from keras import layers
-from os import walk
-from os.path import splitext
-from os.path import join
 
 from resources.audio_features.arff_files_full_video.arffToCsv import main
 
@@ -106,7 +94,8 @@ def annotate(dict_input_output, ):
     print(len(df_input_output.index))
     df_input_output.to_csv("Annotation_audio_features.csv", index=False)
 
-
+SMILE_EXTRACT = DIR.parent / "opensmile-3.0.1-win-x64"/ "bin" / "SMILExtract.exe"
+SMILE_CONFIG = DIR.parent / "opensmile-3.0.1-win-x64"/ "config"/"emobase" /"emobase.conf"
 def extract_features_full_video():
     out_dir = f"{AUDIO_FEATURES_DIR}/arff_files_full_video/"
     # out_dir = f"{AUDIO_FEATURES_DIR}/arff_files_frame_wise/"
@@ -114,7 +103,7 @@ def extract_features_full_video():
     for filename in glob.glob(os.path.join(WAV_DIR, '*.wav')):
         input_filename = os.path.basename(filename)
         output_filename = input_filename.replace(".wav", ".arff")
-        cmd = "/Users/ronelpoliak/Afeka/Final_Project/opensmile/build/progsrc/smilextract/SMILExtract -C /Users/ronelpoliak/Afeka/Final_Project/opensmile/config/emobase/emobase.conf -I " + f"{str(WAV_DIR)}/{input_filename} -O {out_dir}{output_filename}"
+        cmd = f"{str(SMILE_EXTRACT)} -C {str(SMILE_CONFIG)} -I {str(WAV_DIR)}/{input_filename} -O {out_dir}{output_filename}"
         x = os.system(cmd)
         if (x == 0):
             wav_file_count += 1
@@ -143,6 +132,15 @@ def re_annotate_and_combine_csvs():
     combined_csv_path = dir + "/Combined_csv_fullvideo.csv"
     df_combined.to_csv(combined_csv_path)
 
+def copy_all_csvs_to_destination_folder():
+    list_dir = [f"{str(AUDIO_FEATURES_DIR)}/arff_files_full_video"]
+    out_dir = f"{str(AUDIO_FEATURES_DIR)}/csv_full_audio"
+    for dir in list_dir:
+        for filename in glob.glob(os.path.join(dir, '*.csv')):
+            file = os.path.basename(filename)
+            out_path = out_dir + "/" + file
+            cmd = "cp " + filename + " " + out_path
+            os.system(cmd)
 
 if __name__ == '__main__':
     # video_list = add_trial_testimonies_data()
@@ -152,3 +150,6 @@ if __name__ == '__main__':
     # extract_features_full_video()
     # convert_arrf_file_to_csv()
     re_annotate_and_combine_csvs()
+    # main(str(f"{AUDIO_FEATURES_DIR}/arff_files_full_video/"))
+    # copy_all_csvs_to_destination_folder()
+    #  cp *.csv ..\csv_full_audio\

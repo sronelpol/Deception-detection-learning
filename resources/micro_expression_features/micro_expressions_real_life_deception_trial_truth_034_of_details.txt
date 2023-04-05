@@ -1,0 +1,10 @@
+Input:C:\Users\ronel\afeka\Deception-detection-learning\datasets/trial_testimonies/Truthful\trial_truth_034.mp4
+Input full path:C:\Users\ronel\afeka\Deception-detection-learning\datasets/trial_testimonies/Truthful\trial_truth_034.mp4
+Camera parameters:354.167,354.167,240,160
+Output csv:micro_expressions_real_life_deception_trial_truth_034.csv
+Gaze: 0
+AUs: 1
+Landmarks 2D: 0
+Landmarks 3D: 0
+Pose: 1
+Shape parameters: 0
