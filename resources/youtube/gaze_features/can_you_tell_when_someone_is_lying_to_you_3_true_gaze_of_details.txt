@@ -1,0 +1,10 @@
+Input:C:\Users\ronel\afeka\Deception-detection-learning\datasets\youtube\can_you_tell_when_someone_is_lying_to_you_3_true.mp4
+Input full path:C:\Users\ronel\afeka\Deception-detection-learning\datasets\youtube\can_you_tell_when_someone_is_lying_to_you_3_true.mp4
+Camera parameters:875,875,640,360
+Output csv:can_you_tell_when_someone_is_lying_to_you_3_true_gaze.csv
+Gaze: 1
+AUs: 0
+Landmarks 2D: 0
+Landmarks 3D: 0
+Pose: 0
+Shape parameters: 0
