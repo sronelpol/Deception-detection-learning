@@ -5,8 +5,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, log_loss
 from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
 
 DIR = Path(__file__).parent.parent
 DATASETS_DIR = DIR / "datasets"
@@ -64,6 +65,7 @@ for key, data_dict_indiv in zip(FEATURE_NAME_TP_PATH.keys(), listofdicts):
             filename = filename.replace(*reps)
         data_dict_indiv[filename] = data
 
+# Checking If the Labels are Same for Same Keys in Each dictionary & Separating Labels from Training Data
 filename_dictkeys = list(audio_dict)
 label_dict = {}
 for key in filename_dictkeys:
@@ -71,11 +73,11 @@ for key in filename_dictkeys:
     label_audio = audiodata.loc[:, "label"].unique()[0]
     label_gaze = gazedata.loc[:, "label"].unique()[0]
     label_mexp = mexpdata.loc[:, "label"].unique()[0]
-    label_set = set([label_audio, label_gaze, label_mexp])
-    if len(label_set) > 1:
+    labels = {label_audio, label_gaze, label_mexp}
+    if len(labels) > 1:
         print(key)
     else:
-        label_dict[key] = list(label_set)[0]
+        label_dict[key] = list(labels)[0]
 
 label_to_num = lambda value: 0 if value == 'Truthful' else 1
 label_dict_num = {key: label_to_num(value) for key, value in label_dict.items()}
@@ -84,11 +86,11 @@ print(label_dict_num)
 df_list_mexp, df_list_audio, df_list_gaze, df_label = [], [], [], []
 for key in filename_dictkeys:
     audio_dict[key].drop(["name", "Unnamed: 0", "label"], axis=1, inplace=True)
-    audio_dict[key] = audio_dict[key].mean(axis=0)
+    audio_dict[key] = audio_dict[key].mean(axis=0, numeric_only=True)
     gaze_dict[key].drop(["frame", "Unnamed: 0", "label"], axis=1, inplace=True)
-    gaze_dict[key] = gaze_dict[key].mean(axis=0)
+    gaze_dict[key] = gaze_dict[key].mean(axis=0, numeric_only=True)
     mexp_dict[key].drop(["frame", "Unnamed: 0", "label"], axis=1, inplace=True)
-    mexp_dict[key] = mexp_dict[key].mean(axis=0)
+    mexp_dict[key] = mexp_dict[key].mean(axis=0, numeric_only=True)
     mexp_individual = mexp_dict[key].to_numpy()
     audio_individual = audio_dict[key].to_numpy()
     gaze_individual = gaze_dict[key].to_numpy()
@@ -99,12 +101,11 @@ for key in filename_dictkeys:
     df_label.append(label_individual)
 
 df_list_mexp = np.asarray(df_list_mexp)
-df_list_mexp.shape
+print(df_list_mexp.shape)
 df_list_audio = np.asarray(df_list_audio)
-df_list_audio.shape
+print(df_list_audio.shape)
 df_list_gaze = np.asarray(df_list_gaze)
-df_list_gaze.shape
-
+print(df_list_gaze.shape)
 split1 = train_test_split(df_list_mexp, df_label, test_size=0.1, random_state=42)
 split2 = train_test_split(df_list_audio, df_label, test_size=0.1, random_state=42)
 split3 = train_test_split(df_list_gaze, df_label, test_size=0.1, random_state=42)
@@ -115,47 +116,45 @@ split3 = train_test_split(df_list_gaze, df_label, test_size=0.1, random_state=42
 print(np.all(y_test_m == y_test_a))
 print(np.all(y_test_a == y_test_g))
 
-from xgboost.sklearn import XGBClassifier
 
-model_a = XGBClassifier(silent=False,
-                        scale_pos_weight=1,
-                        learning_rate=0.01,
-                        colsample_bytree=0.4,
-                        subsample=0.8,
-                        objective='binary:logistic',
-                        n_estimators=1000,
-                        reg_alpha=0.3,
-                        max_depth=3,
-                        gamma=10,
-                        early_stopping_rounds=10,
-                        eval_metric=["error", "logloss"],
-                        )
-eval_set = [(X_train_a, y_train_a), (X_test_a, y_test_a)]
+def run_training(X_train, y_train, X_test, y_test, title=""):
+    model = MLPClassifier(random_state=42, n_iter_no_change=20, verbose=True)
+    history = model.fit(X_train, y_train)
+    # make predictions for test data
+    y_pred = model.predict(X_test)
+    predictions_audio_test = [round(value) for value in y_pred]
+    # evaluate predictions
+    accuracy = accuracy_score(y_test, predictions_audio_test)
+    print(f"{title} Accuracy: %.2f%%" % (accuracy * 100.0))
+    # Calculate the log loss
+    y_prob = model.predict_proba(X_test)
+    logloss = log_loss(y_test, y_prob)
+    print("Log Loss: %.2f" % logloss)
 
-model_a.fit(X_train_a, y_train_a, eval_set=eval_set, verbose=True)
-# make predictions for test data
-y_pred = model_a.predict(X_test_a)
-predictions_audio_test = [round(value) for value in y_pred]
-# evaluate predictions
-accuracy = accuracy_score(y_test_a, predictions_audio_test)
+    # Plot the loss and accuracy over epochs
+    plt.plot(history.loss_curve_)
+    plt.title(f'Loss Curve {title}')
+    plt.xlabel('Number of iterations')
+    plt.ylabel('Loss')
+    plt.show()
+    return model
+
+
+model_a = run_training(X_train_a, y_train_a, X_test_a, y_test_a, title="Audio")
+model_m = run_training(X_train_m, y_train_m, X_test_m, y_test_m, title="Micro Expressions")
+model_g = run_training(X_train_g, y_train_g, X_test_g, y_test_g, title="Gaze")
+
+from scipy.stats import mode
+
+# Make predictions using each model
+y_pred_a = model_a.predict(X_test_a)
+y_pred_m = model_m.predict(X_test_m)
+y_pred_g = model_g.predict(X_test_g)
+
+# Combine the predictions using majority voting
+y_pred = mode([y_pred_a, y_pred_m, y_pred_g], axis=0, keepdims=True)[0][0]
+
+# Calculate the accuracy of the combined predictions
+accuracy = accuracy_score(y_test_a, y_pred)
+print("combined")
 print("Accuracy: %.2f%%" % (accuracy * 100.0))
-# retrieve performance metrics
-results = model_a.evals_result()
-epochs = len(results['validation_0']['error'])
-x_axis = range(0, epochs)
-# plot log loss
-fig, ax = plt.subplots()
-ax.plot(x_axis, results['validation_0']['logloss'], label='Train')
-ax.plot(x_axis, results['validation_1']['logloss'], label='Test')
-ax.legend()
-plt.ylabel('Log Loss')
-plt.title('XGBoost Log Loss')
-plt.show()
-# plot classification error
-fig, ax = plt.subplots()
-ax.plot(x_axis, results['validation_0']['error'], label='Train')
-ax.plot(x_axis, results['validation_1']['error'], label='Test')
-ax.legend()
-plt.ylabel('Classification Error')
-plt.title('XGBoost Classification Error')
-plt.show()
