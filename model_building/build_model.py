@@ -2,6 +2,7 @@ import glob
 import os
 from pathlib import Path
 
+import joblib
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -9,9 +10,12 @@ from sklearn.metrics import accuracy_score, log_loss
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 
+
 DIR = Path(__file__).parent.parent
 DATASETS_DIR = DIR / "datasets"
 RESOURCES_DIR = DIR / "resources"
+MODELS_DIR = DIR / "models"
+
 AUDIO_FEATURES_DIR = RESOURCES_DIR / "audio_features" / "csv_full_audio"
 GAZE_FEATURES_DIR = RESOURCES_DIR / "gaze_features"
 MICRO_EXPRESSION_FEATURES_DIR = RESOURCES_DIR / "micro_expression_features"
@@ -137,6 +141,9 @@ def run_training(X_train, y_train, X_test, y_test, title=""):
     plt.xlabel('Number of iterations')
     plt.ylabel('Loss')
     plt.show()
+
+
+    joblib.dump(model, f"{str(MODELS_DIR)}/{title}_model.pkl")
     return model
 
 
@@ -152,9 +159,11 @@ y_pred_m = model_m.predict(X_test_m)
 y_pred_g = model_g.predict(X_test_g)
 
 # Combine the predictions using majority voting
-y_pred = mode([y_pred_a, y_pred_m, y_pred_g], axis=0, keepdims=True)[0][0]
+y_pred = mode([y_pred_a, y_pred_m, y_pred_g], axis=0)[0][0]
 
 # Calculate the accuracy of the combined predictions
 accuracy = accuracy_score(y_test_a, y_pred)
 print("combined")
 print("Accuracy: %.2f%%" % (accuracy * 100.0))
+joblib.dump(y_pred, f"{str(MODELS_DIR)}/combined_model.pkl")
+
