@@ -9,10 +9,8 @@
 import os
 
 
-
-
 # Function for converting arff list to csv list
-def toCsv(text):
+def to_csv(text):
     data = False
     header = ""
     new_content = []
@@ -36,7 +34,7 @@ def toCsv(text):
     return new_content
 
 
-def main(file_directory):
+def convert_arrf_file_to_csv(file_directory):
     # Main loop for reading and writing files
     # Getting all the arff files from the current directory
     files = [arff for arff in os.listdir(file_directory) if arff.endswith(".arff")]
@@ -44,6 +42,6 @@ def main(file_directory):
         with open(f"{file_directory}/{file}", "r") as inFile:
             content = inFile.readlines()
             name, ext = os.path.splitext(inFile.name)
-            new = toCsv(content)
+            new = to_csv(content)
             with open(name + ".csv", "w") as outFile:
                 outFile.writelines(new)
