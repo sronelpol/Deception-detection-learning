@@ -21,9 +21,9 @@ GAZE_FEATURES_DIR = RESOURCES_DIR / "gaze_features"
 MICRO_EXPRESSION_FEATURES_DIR = RESOURCES_DIR / "micro_expression_features"
 
 FEATURE_NAME_TO_PATH = {
-    'audio_data': str(AUDIO_FEATURES_DIR),
-    'gaze_data': str(GAZE_FEATURES_DIR),
-    'micro_expression_data': str(MICRO_EXPRESSION_FEATURES_DIR)
+    "audio_data": str(AUDIO_FEATURES_DIR),
+    "gaze_data": str(GAZE_FEATURES_DIR),
+    "micro_expression_data": str(MICRO_EXPRESSION_FEATURES_DIR),
 }
 PRINT = True
 
@@ -34,11 +34,11 @@ def count_number_of_files_per_model(feature_name_to_path=None):
     count_gaze = 0
     count_micro_expressions = 0
     count_audio = 0
-    for _ in glob.glob(os.path.join(feature_name_to_path['gaze_data'], '*.csv')):
+    for _ in glob.glob(os.path.join(feature_name_to_path["gaze_data"], "*.csv")):
         count_gaze += 1
-    for _ in glob.glob(os.path.join(feature_name_to_path['audio_data'], '*.csv')):
+    for _ in glob.glob(os.path.join(feature_name_to_path["audio_data"], "*.csv")):
         count_audio += 1
-    for _ in glob.glob(os.path.join(feature_name_to_path['micro_expression_data'], '*.csv')):
+    for _ in glob.glob(os.path.join(feature_name_to_path["micro_expression_data"], "*.csv")):
         count_micro_expressions += 1
 
     print("Number of Gaze Data : " + str(count_gaze))
@@ -53,7 +53,7 @@ def show_data(feature_name_to_path=None):
     for key in feature_name_to_path.keys():
         count = 0
         data_shape, file_names = [], []
-        for filepath in glob.glob(os.path.join(feature_name_to_path[key], '*.csv')):
+        for filepath in glob.glob(os.path.join(feature_name_to_path[key], "*.csv")):
             file_shape = pd.read_csv(filepath).shape
             data_shape.append([file_shape[0], file_shape[1]])
             filename = os.path.basename(filepath)
@@ -76,8 +76,8 @@ def remove_feature_name_annotation(feature_name_to_path=None):
         feature_name_to_path = FEATURE_NAME_TO_PATH
     audio, gaze, mexp = {}, {}, {}
     all_data = [audio, gaze, mexp]
-    for key, data_individual in zip(feature_name_to_path.keys(), all_data):
-        for filepath in glob.glob(os.path.join(feature_name_to_path[key], '*.csv')):
+    for key, data_individual in zip(feature_name_to_path.keys(), all_data, strict=True):
+        for filepath in glob.glob(os.path.join(feature_name_to_path[key], "*.csv")):
             data = pd.read_csv(filepath)
             filename = os.path.basename(filepath)
             for reps in (("gaze_", ""), ("audio_", ""), ("micro_expressions_", "")):
@@ -106,8 +106,7 @@ def check_and_prepare_labels(audio_dict, gaze_dict, mexp_dict):
 
 
 def encode_labels(_filename_to_label):
-    _filename_to_encoded_label = {key: 0 if value == 'Truthful' else 1
-                                  for key, value in _filename_to_label.items()}
+    _filename_to_encoded_label = {key: 0 if value == "Truthful" else 1 for key, value in _filename_to_label.items()}
     if PRINT:
         print(filename_to_encoded_label)
     return _filename_to_encoded_label
@@ -161,9 +160,9 @@ def run_training(X_train, y_train, X_test, y_test, title="", should_print=PRINT)
 
     # Plot the loss and accuracy over epochs
     plt.plot(history.loss_curve_)  # noqa
-    plt.title(f'Loss Curve {title}')
-    plt.xlabel('Number of iterations')
-    plt.ylabel('Loss')
+    plt.title(f"Loss Curve {title}")
+    plt.xlabel("Number of iterations")
+    plt.ylabel("Loss")
     plt.show()
 
     joblib.dump(model, f"{str(MODELS_DIR)}/{title}_model.pkl")
@@ -191,14 +190,15 @@ def train_the_models_and_combine(should_print=PRINT):
     joblib.dump(y_pred, f"{str(MODELS_DIR)}/combined_model.pkl")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     count_number_of_files_per_model()
     show_data()
     audio_data, gaze_data, micro_expressions_data = remove_feature_name_annotation()
     filename_to_label, filenames = check_and_prepare_labels(audio_data, gaze_data, micro_expressions_data)
     filename_to_encoded_label = encode_labels(filename_to_label)
-    df_micro_expressions, df_audio, df_gaze, df_label = (
-        clean_and_prepare_data(audio_data, gaze_data, micro_expressions_data, filename_to_encoded_label))
+    df_micro_expressions, df_audio, df_gaze, df_label = clean_and_prepare_data(
+        audio_data, gaze_data, micro_expressions_data, filename_to_encoded_label
+    )
     split1 = train_test_split(df_micro_expressions, df_label, test_size=0.1, random_state=42)
     split2 = train_test_split(df_audio, df_label, test_size=0.1, random_state=42)
     split3 = train_test_split(df_gaze, df_label, test_size=0.1, random_state=42)

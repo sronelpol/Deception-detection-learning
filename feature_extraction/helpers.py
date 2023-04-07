@@ -8,13 +8,10 @@ DATASETS_DIR = DIR / "datasets"
 
 def add_trial_testimonies_data():
     videos = []
-    dir_list = [
-        f"{str(DATASETS_DIR)}/trial_testimonies/Deceptive",
-        f"{str(DATASETS_DIR)}/trial_testimonies/Truthful"
-    ]
+    dir_list = [f"{str(DATASETS_DIR)}/trial_testimonies/Deceptive", f"{str(DATASETS_DIR)}/trial_testimonies/Truthful"]
     count_trial = 0
     for _dir in dir_list:
-        for filename in glob.glob(os.path.join(_dir, '*.mp4')):
+        for filename in glob.glob(os.path.join(_dir, "*.mp4")):
             videos.append(filename)
             count_trial += 1
     print("number of videos from trial data")
@@ -25,7 +22,7 @@ def add_trial_testimonies_data():
 def add_youtube_data():
     videos = []
     count = 0
-    for filename in glob.glob(os.path.join(f"{str(DATASETS_DIR)}/youtube", '*.mp4')):
+    for filename in glob.glob(os.path.join(f"{str(DATASETS_DIR)}/youtube", "*.mp4")):
         videos.append(filename)
         count += 1
     print("number of videos from youtube data")

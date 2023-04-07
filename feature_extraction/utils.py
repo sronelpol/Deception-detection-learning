@@ -21,7 +21,7 @@ def listify(something):
 
 def extract_open_face_features(video_list, path_dir, mode, prefix_name):
     dict_input_output = {}
-    output_filename_list = list()
+    output_filename_list = []
     count = 0
     for filename in video_list:
         new_filename = os.path.split(filename)[-1]
@@ -47,13 +47,13 @@ def annotate_openface_output(dict_input_output, path_to_store):
     df_input_output = pd.DataFrame(columns=head)
     for key, value in dict_input_output.items():
         df_input_output = df_input_output.append(pd.Series(np.nan, index=head), ignore_index=True)
-        df_input_output.iloc[index, head.index('Path_for_mp4_video')] = key
-        df_input_output.iloc[index, head.index('csv_file_name_path_gaze_data')] = value
-        df_input_output.iloc[index, head.index('csv_file_name')] = os.path.basename(value)
+        df_input_output.iloc[index, head.index("Path_for_mp4_video")] = key
+        df_input_output.iloc[index, head.index("csv_file_name_path_gaze_data")] = value
+        df_input_output.iloc[index, head.index("csv_file_name")] = os.path.basename(value)
         if "lie" in value:
-            df_input_output.iloc[index, head.index('label')] = "Deceptive"
+            df_input_output.iloc[index, head.index("label")] = "Deceptive"
         if "truth" in value:
-            df_input_output.iloc[index, head.index('label')] = "Truthful"
+            df_input_output.iloc[index, head.index("label")] = "Truthful"
         index += 1
 
     print(len(df_input_output.index))
@@ -64,11 +64,11 @@ def re_annotate_openface_output(dir_path):
     df_readannotation = pd.read_csv(f"{dir_path}/annotation.csv")
     value = None
     out_path = None
-    for filename in glob.glob(os.path.join(dir_path, '*.csv')):
+    for filename in glob.glob(os.path.join(dir_path, "*.csv")):
         file = os.path.basename(filename)
         df_readindividual = pd.read_csv(filename)
-        for index, row in df_readannotation.iterrows():
-            if (row["csv_file_name"] == file):
+        for _index, row in df_readannotation.iterrows():
+            if row["csv_file_name"] == file:
                 value = row["label"]
                 out_path = row["csv_file_name_path"]
         if value:
@@ -81,10 +81,10 @@ def convert_to_mp4_to_wav_files(video_list, output_dir, prefix_name="audio_", co
     exit_status = None
     # dictionary of input and output file path
     dict_input_output = {}
-    output_filename_list = list()
+    output_filename_list = []
     wav_count = 0
     for filename in video_list:
-        cmd = "ffmpeg -i " + "\"" + filename + "\"" + " "
+        cmd = "ffmpeg -i " + filename + " "
         filename_with_file_type = os.path.split(filename)[-1]
         output_filename = prefix_name + filename_with_file_type
         wav_count += 1
@@ -104,7 +104,7 @@ def convert_to_mp4_to_wav_files(video_list, output_dir, prefix_name="audio_", co
 def count_number_of_wav_files(dir_path):
     count = 0
     wav_list = []
-    for files in glob.glob(os.path.join(dir_path, '*.wav')):
+    for files in glob.glob(os.path.join(dir_path, "*.wav")):
         wav_list.append(files)
         count += 1
     print(count)
@@ -117,16 +117,16 @@ def annotate_audio_files(input_output, dir_path):
     df_input_output = pd.DataFrame(columns=head)
     for key, value in input_output.items():
         df_input_output = df_input_output.append(pd.Series(np.nan, index=head), ignore_index=True)
-        df_input_output.iloc[index, head.index('Path_for_mp4_video')] = key
-        df_input_output.iloc[index, head.index('Path_for_wav_file')] = value
+        df_input_output.iloc[index, head.index("Path_for_mp4_video")] = key
+        df_input_output.iloc[index, head.index("Path_for_wav_file")] = value
         csv_file_name = os.path.basename(value)
         csv_file_name = csv_file_name.replace(".wav", ".csv")
-        df_input_output.iloc[index, head.index('csv_file_name')] = csv_file_name
-        df_input_output.iloc[index, head.index('csv_file_name_path')] = dir_path + csv_file_name
+        df_input_output.iloc[index, head.index("csv_file_name")] = csv_file_name
+        df_input_output.iloc[index, head.index("csv_file_name_path")] = dir_path + csv_file_name
         if "lie" in value:
-            df_input_output.iloc[index, head.index('label')] = "Deceptive"
+            df_input_output.iloc[index, head.index("label")] = "Deceptive"
         if "truth" in value:
-            df_input_output.iloc[index, head.index('label')] = "Truthful"
+            df_input_output.iloc[index, head.index("label")] = "Truthful"
 
         index += 1
     print(len(df_input_output.index))
@@ -135,7 +135,7 @@ def annotate_audio_files(input_output, dir_path):
 
 def extract_audio_features(input_dir, output_dir):
     wav_file_count = 0
-    for filename in glob.glob(os.path.join(input_dir, '*.wav')):
+    for filename in glob.glob(os.path.join(input_dir, "*.wav")):
         input_filename = os.path.basename(filename)
         output_filename = input_filename.replace(".wav", ".arff")
         open_smile = f"{str(SMILE_EXTRACT)} -C {str(SMILE_CONFIG)}"

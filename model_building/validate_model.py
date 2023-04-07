@@ -16,9 +16,9 @@ FILENAME_TO_LABEL = {
 }
 
 FEATURE_NAME_TO_PATH = {
-    'audio_data': str(AUDIO_FEATURES_DIR),
-    'gaze_data': str(GAZE_FEATURES_DIR),
-    'micro_expression_data': str(MICRO_EXPRESSION_FEATURES_DIR)
+    "audio_data": str(AUDIO_FEATURES_DIR),
+    "gaze_data": str(GAZE_FEATURES_DIR),
+    "micro_expression_data": str(MICRO_EXPRESSION_FEATURES_DIR),
 }
 
 

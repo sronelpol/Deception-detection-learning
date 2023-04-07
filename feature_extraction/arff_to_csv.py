@@ -18,7 +18,7 @@ def to_csv(text):
         if not data:
             if "@ATTRIBUTE" in line or "@attribute" in line:
                 attributes = line.split()
-                if ("@attribute" in line):
+                if "@attribute" in line:
                     attri_case = "@attribute"
                 else:
                     attri_case = "@ATTRIBUTE"
@@ -27,7 +27,7 @@ def to_csv(text):
             elif "@DATA" in line or "@data" in line:
                 data = True
                 header = header[:-1]
-                header += '\n'
+                header += "\n"
                 new_content.append(header)
         else:
             new_content.append(line)
@@ -39,7 +39,7 @@ def convert_arrf_file_to_csv(file_directory):
     # Getting all the arff files from the current directory
     files = [arff for arff in os.listdir(file_directory) if arff.endswith(".arff")]
     for file in files:
-        with open(f"{file_directory}/{file}", "r") as inFile:
+        with open(f"{file_directory}/{file}") as inFile:
             content = inFile.readlines()
             name, ext = os.path.splitext(inFile.name)
             new = to_csv(content)
