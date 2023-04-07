@@ -10,8 +10,7 @@ extend-exclude = '''
 
 [tool.ruff]
 line-length = 120
-select = ["E", "F", "B", "C", "W", "B" , "B9", "UP", "ISC", "PLC", "PLE", "PLR", "PLW"]
-ignore = ["PLR0913"]
+ignore = ["PLR0913", "B905"]
 fix = true
 
 [tool.ruff.mccabe]

@@ -76,7 +76,7 @@ def remove_feature_name_annotation(feature_name_to_path=None):
         feature_name_to_path = FEATURE_NAME_TO_PATH
     audio, gaze, mexp = {}, {}, {}
     all_data = [audio, gaze, mexp]
-    for key, data_individual in zip(feature_name_to_path.keys(), all_data, strict=True):
+    for key, data_individual in zip(feature_name_to_path.keys(), all_data):
         for filepath in glob.glob(os.path.join(feature_name_to_path[key], "*.csv")):
             data = pd.read_csv(filepath)
             filename = os.path.basename(filepath)
