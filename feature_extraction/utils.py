@@ -144,3 +144,27 @@ def extract_audio_features(input_dir, output_dir):
         if x == 0:
             wav_file_count += 1
     print(wav_file_count)
+
+
+def re_annotate_audio_data_and_combine_csvs(input_dir):
+    df_read_annotation = pd.read_csv("annotation_audio_features.csv")
+    df_combined = pd.DataFrame()
+    for filename in glob.glob(os.path.join(input_dir, "*.csv")):
+        file = os.path.basename(filename)
+        df_readindividual = pd.read_csv(filename)
+        value = False
+        outputpath = False
+        for _index, row in df_read_annotation.iterrows():
+            if row["csv_file_name"] == file:
+                value = row["label"]
+                outputpath = row["csv_file_name_path"]
+        if not value:
+            raise ValueError
+        df_readindividual["label"] = value
+        # del df_readindividual['emotion']
+        if not outputpath:
+            raise ValueError
+        df_readindividual.to_csv(outputpath)
+        df_combined = df_combined.append(df_readindividual, ignore_index=True)
+    combined_csv_path = "audio_features_combined.csv"
+    df_combined.to_csv(combined_csv_path)
