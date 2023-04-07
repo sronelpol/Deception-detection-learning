@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import joblib
 from scipy.stats import mode
 
 from feature_extraction.arff_to_csv import convert_arrf_file_to_csv
@@ -20,8 +21,8 @@ from model_building.utils import (
     remove_feature_name_annotation,
     check_and_prepare_labels,
     encode_labels,
+    delete_unnecessary_files,
 )
-import joblib
 
 DIR = Path(__file__).parent.parent
 RESOURCES_DIR = DIR / "resources"
@@ -31,10 +32,8 @@ GAZE_FEATURES_DIR = RESOURCES_DIR / "test_your_video" / "gaze_features"
 MICRO_EXPRESSION_FEATURES_DIR = RESOURCES_DIR / "test_your_video" / "micro_expression_features"
 
 # TODO: put here the full path for your mp4 video
-VIDEO_FULL_PATH = (
-    "/Users/ronelpoliak/Afeka/Final_Project/Deception-detection-learning/datasets/youtube/"
-    "can_you_tell_when_someone_is_lying_to_you_3_truth.mp4"
-)
+VIDEO_FULL_PATH = r"C:\Users\ronel\afeka\Deception-detection-learning\datasets\
+youtube\can_you_tell_when_someone_is_lying_to_you_1_truth.mp4"
 FEATURE_NAME_TO_PATH = {
     "audio_data": str(AUDIO_FEATURES_DIR),
     "gaze_data": str(GAZE_FEATURES_DIR),
@@ -73,6 +72,7 @@ def extract_data_features():
 
 
 def prepare_data_for_assessment():
+    delete_unnecessary_files(FEATURE_NAME_TO_PATH.values())
     count_number_of_files_per_model(FEATURE_NAME_TO_PATH)
     show_data(FEATURE_NAME_TO_PATH)
     audio_data, gaze_data, micro_expressions_data = remove_feature_name_annotation(FEATURE_NAME_TO_PATH)
@@ -99,12 +99,12 @@ def assess_model_with_youtube_data(df_audio, df_gaze):
     # y_pred = mode([y_pred_a, y_pred_m, y_pred_g], axis=0, keepdims=True)[0][0]
 
     if y_pred:
-        print("This deception")
+        print("deception")
     else:
-        print("It's truth")
+        print("truth")
 
 
 if __name__ == "__main__":
     extract_data_features()
-    df_micro_expressions, df_audio, df_gaze, df_label = prepare_data_for_assessment()
-    assess_model_with_youtube_data(df_micro_expressions, df_audio)
+    _, df_audio, df_gaze, _ = prepare_data_for_assessment()
+    assess_model_with_youtube_data(df_audio, df_gaze)

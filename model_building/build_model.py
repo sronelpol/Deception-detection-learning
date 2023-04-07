@@ -118,7 +118,7 @@ if __name__ == "__main__":
     filename_to_label, filenames = check_and_prepare_labels(audio_data, gaze_data, micro_expressions_data)
     filename_to_encoded_label = encode_labels(filename_to_label)
     df_micro_expressions, df_audio, df_gaze, df_label = clean_and_prepare_data(
-        audio_data, gaze_data, micro_expressions_data, filename_to_encoded_label,filenames
+        audio_data, gaze_data, micro_expressions_data, filename_to_encoded_label, filenames
     )
     split1 = train_test_split(df_micro_expressions, df_label, test_size=0.1, random_state=42)
     split2 = train_test_split(df_audio, df_label, test_size=0.1, random_state=42)

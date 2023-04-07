@@ -86,7 +86,7 @@ def convert_to_mp4_to_wav_files(video_list, output_dir, prefix_name="audio_", co
     for filename in video_list:
         cmd = "ffmpeg -i " + filename + " "
         filename_with_file_type = os.path.split(filename)[-1]
-        output_filename = prefix_name + "_" + filename_with_file_type
+        output_filename = prefix_name + filename_with_file_type
         wav_count += 1
         output_filename = output_filename.replace(".mp4", ".wav")
         outpath = output_dir + "/" + output_filename

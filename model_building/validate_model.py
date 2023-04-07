@@ -22,6 +22,7 @@ from model_building.utils import (
     remove_feature_name_annotation,
     check_and_prepare_labels,
     encode_labels,
+    delete_unnecessary_files,
 )
 import joblib
 
@@ -80,6 +81,7 @@ def extract_youtube_data_features():
 
 
 def prepare_youtube_data_for_assessment():
+    delete_unnecessary_files(FEATURE_NAME_TO_PATH.values())
     count_number_of_files_per_model(FEATURE_NAME_TO_PATH)
     show_data(FEATURE_NAME_TO_PATH)
     audio_data, gaze_data, micro_expressions_data = remove_feature_name_annotation(FEATURE_NAME_TO_PATH)
