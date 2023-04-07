@@ -102,13 +102,13 @@ def check_and_prepare_labels(audio_dict, gaze_dict, mexp_dict):
             raise ValueError
         else:
             _filename_to_label[filename] = list(labels)[0]
-    return filename_to_label, filenames
+    return _filename_to_label, filenames
 
 
 def encode_labels(_filename_to_label):
     _filename_to_encoded_label = {key: 0 if value == "Truthful" else 1 for key, value in _filename_to_label.items()}
     if PRINT:
-        print(filename_to_encoded_label)
+        print(_filename_to_encoded_label)
     return _filename_to_encoded_label
 
 
