@@ -15,7 +15,11 @@
    instructions: [link](https://github.com/TadasBaltrusaitis/OpenFace/wiki/Windows-Installation)
 2. install OpenSmile outside this folder(download and
    extract): [link](https://github.com/audeering/opensmile/releases/download/v3.0.1/opensmile-3.0.1-win-x64.zip)
+3. download ffmpeg and add it you exe to path: [link](https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z)
+4. install python requirements by typing ```pip install -r ./requirements.txt ```
 
+
+## In order to ru
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)
