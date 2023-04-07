@@ -48,7 +48,7 @@ def annotate_openface_output(dict_input_output, path_to_store):
     for key, value in dict_input_output.items():
         df_input_output = df_input_output.append(pd.Series(np.nan, index=head), ignore_index=True)
         df_input_output.iloc[index, head.index("Path_for_mp4_video")] = key
-        df_input_output.iloc[index, head.index("csv_file_name_path_gaze_data")] = value
+        df_input_output.iloc[index, head.index("csv_file_name_path")] = value
         df_input_output.iloc[index, head.index("csv_file_name")] = os.path.basename(value)
         if "lie" in value:
             df_input_output.iloc[index, head.index("label")] = "Deceptive"
@@ -77,7 +77,7 @@ def re_annotate_openface_output(dir_path):
             df_readindividual.to_csv(out_path)
 
 
-def convert_to_mp4_to_wav_files(video_list, output_dir, prefix_name="audio_", convert=False):
+def convert_to_mp4_to_wav_files(video_list, output_dir, prefix_name="audio_", convert=True):
     exit_status = None
     # dictionary of input and output file path
     dict_input_output = {}
@@ -86,10 +86,10 @@ def convert_to_mp4_to_wav_files(video_list, output_dir, prefix_name="audio_", co
     for filename in video_list:
         cmd = "ffmpeg -i " + filename + " "
         filename_with_file_type = os.path.split(filename)[-1]
-        output_filename = prefix_name + filename_with_file_type
+        output_filename = prefix_name + "_" + filename_with_file_type
         wav_count += 1
         output_filename = output_filename.replace(".mp4", ".wav")
-        outpath = output_dir + output_filename
+        outpath = output_dir + "/" + output_filename
         cmd = cmd + outpath
         if convert:
             exit_status = os.system(cmd)
@@ -122,7 +122,7 @@ def annotate_audio_files(input_output, dir_path):
         csv_file_name = os.path.basename(value)
         csv_file_name = csv_file_name.replace(".wav", ".csv")
         df_input_output.iloc[index, head.index("csv_file_name")] = csv_file_name
-        df_input_output.iloc[index, head.index("csv_file_name_path")] = dir_path + csv_file_name
+        df_input_output.iloc[index, head.index("csv_file_name_path")] = dir_path + "/" + csv_file_name
         if "lie" in value:
             df_input_output.iloc[index, head.index("label")] = "Deceptive"
         if "truth" in value:
@@ -139,7 +139,7 @@ def extract_audio_features(input_dir, output_dir):
         input_filename = os.path.basename(filename)
         output_filename = input_filename.replace(".wav", ".arff")
         open_smile = f"{str(SMILE_EXTRACT)} -C {str(SMILE_CONFIG)}"
-        cmd = f"{open_smile} -I {str(input_dir)}/{input_filename} -O {output_dir}{output_filename}"
+        cmd = f"{open_smile} -I {str(input_dir)}/{input_filename} -O {output_dir}/{output_filename}"
         x = os.system(cmd)
         if x == 0:
             wav_file_count += 1

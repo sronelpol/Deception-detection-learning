@@ -28,7 +28,7 @@ import joblib
 DIR = Path(__file__).parent.parent
 RESOURCES_DIR = DIR / "resources"
 MODELS_DIR = DIR / "models"
-AUDIO_FEATURES_DIR = RESOURCES_DIR / "youtube" / "audio_features" / "csv_full_audio"
+AUDIO_FEATURES_DIR = RESOURCES_DIR / "youtube" / "audio_features"
 GAZE_FEATURES_DIR = RESOURCES_DIR / "youtube" / "gaze_features"
 MICRO_EXPRESSION_FEATURES_DIR = RESOURCES_DIR / "youtube" / "micro_expression_features"
 
@@ -54,7 +54,7 @@ def extract_youtube_data_features():
     dict_input_output, output_filename_list = extract_open_face_features(
         video_list,
         path_dir=str(MICRO_EXPRESSION_FEATURES_DIR),
-        prefix_name="micro_youtube_",
+        prefix_name="micro_expressions_youtube_",
         mode=["pose", "aus"],
     )
     annotate_openface_output(dict_input_output, str(MICRO_EXPRESSION_FEATURES_DIR))
@@ -70,11 +70,11 @@ def extract_youtube_data_features():
     re_annotate_openface_output(str(GAZE_FEATURES_DIR))
     # audio_features
     dict_input_output, output_filename_list = convert_to_mp4_to_wav_files(
-        video_list, output_dir=f"{AUDIO_FEATURES_DIR}/wavfiles/", prefix_name="audio_youyube"
+        video_list, output_dir=str(AUDIO_FEATURES_DIR), prefix_name="audio_youtube"
     )
-    count_number_of_wav_files(str(AUDIO_FEATURES_DIR / "wavfiles"))
+    count_number_of_wav_files(str(AUDIO_FEATURES_DIR))
     annotate_audio_files(dict_input_output, dir_path=str(AUDIO_FEATURES_DIR))
-    extract_audio_features(input_dir=f"{AUDIO_FEATURES_DIR}/wavfiles/", output_dir=str(AUDIO_FEATURES_DIR))
+    extract_audio_features(input_dir=str(AUDIO_FEATURES_DIR), output_dir=str(AUDIO_FEATURES_DIR))
     convert_arrf_file_to_csv(str(AUDIO_FEATURES_DIR))
     re_annotate_audio_data_and_combine_csvs(str(AUDIO_FEATURES_DIR))
 
@@ -86,7 +86,7 @@ def prepare_youtube_data_for_assessment():
     filename_to_label, filenames = check_and_prepare_labels(audio_data, gaze_data, micro_expressions_data)
     filename_to_encoded_label = encode_labels(filename_to_label)
     df_micro_expressions, df_audio, df_gaze, df_label = clean_and_prepare_data(
-        audio_data, gaze_data, micro_expressions_data, filename_to_encoded_label
+        audio_data, gaze_data, micro_expressions_data, filename_to_encoded_label,filenames
     )
     return df_micro_expressions, df_audio, df_gaze, df_label
 
@@ -113,5 +113,6 @@ def assess_model_with_youtube_data(df_micro_expressions, df_audio, df_gaze, df_l
 
 
 if __name__ == "__main__":
-    extract_youtube_data_features()
+    # extract_youtube_data_features()
     df_micro_expressions, df_audio, df_gaze, df_label = prepare_youtube_data_for_assessment()
+    assess_model_with_youtube_data(df_micro_expressions, df_audio, df_gaze, df_label)
