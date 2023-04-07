@@ -13,10 +13,13 @@
 
 1. install OpenFace outside this folder following those
    instructions: [link](https://github.com/TadasBaltrusaitis/OpenFace/wiki/Windows-Installation)
-2. install OpenSmile outside this folder(download and
+   - after extracting the folder, run `download_models.ps1` using powershell
+
+2. download OpenSmile outside this folder(download and
    extract): [link](https://github.com/audeering/opensmile/releases/download/v3.0.1/opensmile-3.0.1-win-x64.zip)
 3. download ffmpeg and add it you exe to path: [link](https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z)
-4. install python requirements by typing ```pip install -r ./requirements.txt ```
+4. download ffmpeg and extract it, than add it to path: [link](https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z)
+5. install python requirements by typing ```pip install -r ./requirements.txt ```
 
 
 ## In order to ru
