@@ -1,0 +1,10 @@
+Input:C:\Users\ronel\afeka\Deception-detection-learning\datasets/trial_testimonies/Deceptive\trial_lie_054.mp4
+Input full path:C:\Users\ronel\afeka\Deception-detection-learning\datasets/trial_testimonies/Deceptive\trial_lie_054.mp4
+Camera parameters:436.719,436.719,319,180
+Output csv:gaze_real_life_deception_trial_lie_054.csv
+Gaze: 1
+AUs: 0
+Landmarks 2D: 0
+Landmarks 3D: 0
+Pose: 0
+Shape parameters: 0
