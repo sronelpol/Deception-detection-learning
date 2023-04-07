@@ -86,7 +86,7 @@ def prepare_youtube_data_for_assessment():
     filename_to_label, filenames = check_and_prepare_labels(audio_data, gaze_data, micro_expressions_data)
     filename_to_encoded_label = encode_labels(filename_to_label)
     df_micro_expressions, df_audio, df_gaze, df_label = clean_and_prepare_data(
-        audio_data, gaze_data, micro_expressions_data, filename_to_encoded_label,filenames
+        audio_data, gaze_data, micro_expressions_data, filename_to_encoded_label, filenames
     )
     return df_micro_expressions, df_audio, df_gaze, df_label
 
@@ -94,15 +94,15 @@ def prepare_youtube_data_for_assessment():
 def assess_model_with_youtube_data(df_micro_expressions, df_audio, df_gaze, df_label):
     # Load the saved model
     model_a = joblib.load(f"{MODELS_DIR}/audio_model.pkl")
-    model_m = joblib.load(f"{MODELS_DIR}/micro_expressions_model.pkl")
+    joblib.load(f"{MODELS_DIR}/micro_expressions_model.pkl")
     model_g = joblib.load(f"{MODELS_DIR}/gaze_model.pkl")
 
     y_pred_a = model_a.predict(df_audio)
-    y_pred_m = model_m.predict(df_micro_expressions)
+    # y_pred_m = model_m.predict(df_micro_expressions)
     y_pred_g = model_g.predict(df_gaze)
 
     # Combine the predictions using majority voting
-    y_pred = mode([y_pred_a, y_pred_m, y_pred_g], axis=0, keepdims=True)[0][0]
+    y_pred = mode([y_pred_a, y_pred_g], axis=0, keepdims=True)[0][0]
 
     # Calculate the accuracy of the combined predictions
     print(y_pred)
