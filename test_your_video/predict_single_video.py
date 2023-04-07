@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import joblib
@@ -41,10 +42,10 @@ FEATURE_NAME_TO_PATH = {
 }
 
 
-def extract_data_features():
+def extract_data_features(file_path=VIDEO_FULL_PATH):
     # micro expressions features:
     dict_input_output, output_filename_list = extract_open_face_features(
-        [VIDEO_FULL_PATH],
+        [file_path],
         path_dir=str(MICRO_EXPRESSION_FEATURES_DIR),
         prefix_name="micro_expressions_",
         mode=["pose", "aus"],
@@ -53,7 +54,7 @@ def extract_data_features():
     re_annotate_openface_output(str(MICRO_EXPRESSION_FEATURES_DIR))
     # gaze features :
     dict_input_output, output_filename_list = extract_open_face_features(
-        [VIDEO_FULL_PATH],
+        [file_path],
         path_dir=str(GAZE_FEATURES_DIR),
         prefix_name="gaze_",
         mode="gaze",
@@ -62,7 +63,7 @@ def extract_data_features():
     re_annotate_openface_output(str(GAZE_FEATURES_DIR))
     # audio_features
     dict_input_output, output_filename_list = convert_to_mp4_to_wav_files(
-        [VIDEO_FULL_PATH], output_dir=str(AUDIO_FEATURES_DIR), prefix_name="audio_"
+        [file_path], output_dir=str(AUDIO_FEATURES_DIR), prefix_name="audio_"
     )
     count_number_of_wav_files(str(AUDIO_FEATURES_DIR))
     annotate_audio_files(dict_input_output, dir_path=str(AUDIO_FEATURES_DIR))
@@ -100,11 +101,31 @@ def assess_model_with_youtube_data(df_audio, df_gaze):
 
     if y_pred:
         print("deception")
+        return "Deception"
     else:
         print("truth")
+        return "Truth"
 
 
-if __name__ == "__main__":
-    extract_data_features()
+def delete_all_temp_files():
+    for dir_path in FEATURE_NAME_TO_PATH.values():
+        file_list = os.listdir(dir_path)
+
+        for file_name in file_list:
+            if file_name == ".gitkeep":
+                continue
+            file_path = os.path.join(dir_path, file_name)
+            try:
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                    print(f"Removed {file_path}")
+            except Exception as e:
+                print(f"Error deleting {file_path}: {e}")
+
+
+def run_single_video_process(filepath):
+    extract_data_features(filepath)
     _, df_audio, df_gaze, _ = prepare_data_for_assessment()
-    assess_model_with_youtube_data(df_audio, df_gaze)
+    prediction_result = assess_model_with_youtube_data(df_audio, df_gaze)
+    delete_all_temp_files()
+    return prediction_result
