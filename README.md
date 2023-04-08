@@ -29,7 +29,7 @@
 2. Select your own video:\
    ![image](https://user-images.githubusercontent.com/73016570/230714684-9ec6ee5c-c0e6-49f5-bdf6-38d6ca54819b.png)
 
-3. see the process running\
+3. see the process running:\
 ![image](https://user-images.githubusercontent.com/73016570/230714691-a29b7b6d-1d7d-4aad-b8e2-4eeeca49b70f.png)
 
 4. Check out the result:\
