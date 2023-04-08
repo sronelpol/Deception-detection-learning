@@ -32,7 +32,7 @@
 3. see the process running\
 ![image](https://user-images.githubusercontent.com/73016570/230714691-a29b7b6d-1d7d-4aad-b8e2-4eeeca49b70f.png)
 
-4. Check ouy the result:\
+4. Check out the result:\
    ![image](https://user-images.githubusercontent.com/73016570/230714572-08307b56-c094-4a21-845a-ab1f7bee9bdd.png)
 
 
