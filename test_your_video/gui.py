@@ -18,6 +18,8 @@ def process_video(video_file):
 class VideoProcessor:
     def __init__(self):
         self.root = tk.Tk()
+        self.root.geometry("200x50")
+
         self.root.title("Video Processor")
 
         # Create a button to select the video file
