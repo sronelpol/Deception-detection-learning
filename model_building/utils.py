@@ -1,5 +1,6 @@
 import glob
 import os
+from pathlib import Path
 
 import pandas as pd
 
@@ -81,3 +82,9 @@ def encode_labels(filename_to_label):
     if PRINT:
         print(filename_to_encoded_label)
     return filename_to_encoded_label
+
+
+def delete_unnecessary_files(paths):
+    for _path in paths:
+        file = Path(_path) / "annotation.csv"
+        file.unlink(missing_ok=True)
