@@ -24,14 +24,17 @@
 
 
 ## Run the code:
-1. Go to test_your_video folder and run the gui.py file. You will see the following window:
-   ![image](https://user-images.githubusercontent.com/73016570/230710749-05c70c5b-fe10-4bdc-bbd0-8088ac5cd12e.png)
-2. Select your own video:
-   ![image](https://user-images.githubusercontent.com/73016570/230711000-a9095871-5b73-4adc-945c-7cf458678763.png)
+1. Go to test_your_video folder and run the gui.py file. You will see the following window:\
+![image](https://user-images.githubusercontent.com/73016570/230714630-ee8e7452-84b3-41e2-bf01-4f388df4aac8.png)
+2. Select your own video:\
+   ![image](https://user-images.githubusercontent.com/73016570/230714684-9ec6ee5c-c0e6-49f5-bdf6-38d6ca54819b.png)
 
-3. see the process running
+3. see the process running\
+![image](https://user-images.githubusercontent.com/73016570/230714691-a29b7b6d-1d7d-4aad-b8e2-4eeeca49b70f.png)
 
-4. Check ouy the result
+4. Check ouy the result:\
+   ![image](https://user-images.githubusercontent.com/73016570/230714572-08307b56-c094-4a21-845a-ab1f7bee9bdd.png)
+
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)

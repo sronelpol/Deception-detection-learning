@@ -122,6 +122,9 @@ def delete_all_temp_files():
             except Exception as e:
                 print(f"Error deleting {file_path}: {e}")
 
+    (Path(__file__).parent / "audio_features_combined.csv").unlink(missing_ok=True)
+    (Path(__file__).parent / "annotation_audio_features.csv").unlink(missing_ok=True)
+
 
 def run_single_video_process(filepath):
     extract_data_features(filepath)

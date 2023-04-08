@@ -1,9 +1,12 @@
 import tkinter as tk
-from tkinter import filedialog
-from tkinter.ttk import Progressbar
+from pathlib import Path
 from threading import Thread
+from tkinter import filedialog, ttk, messagebox
+from tkinter.ttk import Progressbar
 
 from test_your_video.predict_single_video import run_single_video_process
+
+COLOR = "deep sky blue"
 
 
 def process_video(video_file):
@@ -18,28 +21,39 @@ def process_video(video_file):
 class VideoProcessor:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.geometry("200x50")
-
-        self.root.title("Video Processor")
+        self.root.geometry("300x100")
+        self.root.iconbitmap(
+            str(Path(__file__).parent.parent / "resources" / "gui" / "deception-detector-logo.ico"), False
+        )
+        self.root.config(bg=COLOR)
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure("custom.Horizontal.TProgressbar", troughcolor="#AED6F1", background=COLOR)
+        self.root.title("Deception Detector")
 
         # Create a button to select the video file
         self.select_button = tk.Button(self.root, text="Select Video", command=self.select_video)
         self.select_button.pack(pady=10)
 
         # Create a progress bar to show the progress of the video processing
-        self.progress = Progressbar(self.root, orient=tk.HORIZONTAL, length=200, mode="indeterminate")
+        self.progress = Progressbar(
+            self.root, style="custom.Horizontal.TProgressbar", orient=tk.HORIZONTAL, length=200, mode="indeterminate"
+        )
 
         # Create a label to show the spinner
-        self.spinner_label = tk.Label(self.root, text="Processing video, please wait...")
+        self.spinner_label = tk.Label(self.root, bg=COLOR, text="Processing video, please wait...")
 
         # Create a label to show the result
-        self.result_label = tk.Label(self.root)
+        self.result_label = tk.Label(self.root, bg=COLOR)
 
     def select_video(self):
         # Open a file dialog to select a video file
         self.video_file = filedialog.askopenfilename(title="Select Video", filetypes=(("Video Files", "*.mp4"),))
-
+        if not self.video_file:
+            messagebox.showerror("Error", "No video file selected")
+            return
         # Hide the select button and show the progress bar and spinner
+        self.result_label.pack_forget()
         self.select_button.pack_forget()
         self.spinner_label.pack(pady=10)
         self.progress.pack(pady=10)
