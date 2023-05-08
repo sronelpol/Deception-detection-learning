@@ -4,7 +4,7 @@ import joblib
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import mode
-from sklearn.metrics import accuracy_score, log_loss
+from sklearn.metrics import accuracy_score, log_loss, precision_recall_fscore_support
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 
@@ -78,6 +78,10 @@ def run_training(X_train, y_train, X_test, y_test, title="", should_print=PRINT)
     logloss = log_loss(y_test, y_prob)
     if should_print:
         print("Log Loss: %.2f" % logloss)
+        precision, recall, f1_score, _ = precision_recall_fscore_support(y_test, y_pred)
+        print(f"Precision: {precision[0]}")
+        print(f"Recall: {recall[0]}")
+        print(f"F1-score: {f1_score[0]}")
 
     # Plot the loss and accuracy over epochs
     plt.plot(history.loss_curve_)  # noqa
